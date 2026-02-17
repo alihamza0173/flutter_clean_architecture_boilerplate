@@ -1,0 +1,38 @@
+generate-code:
+  build: dart run build_runner build
+  watch: dart run build_runner watch
+  rebuild: dart run build_runner build --delete-conflicting-outputs
+  delete: find . -maxdepth 20 -type f \( -name "*.inject.summary" -o -name "*.inject.dart" -o  -name "*.g.dart" -o -name "*.freezed.dart" \) -delete
+
+clean:
+  (execution): once
+  (scripts):
+    - read -p 'Are you sure you want to delete all ignored directories and files? y/n:' yn
+    - '[[ $yn == "y" ]] && git clean -dfXn'
+
+compile:
+  - flutter clean
+  - $generate-code:delete
+  - flutter pub get
+  - $generate-code:build
+
+build:
+  web: |
+    read -p 'Enter Environment (production/stage/localhost):' dartEnv &&
+    flutter build web --dart-define=DART_ENV=$dartEnv --release
+  android: |
+    while true; do
+      read -p 'Enter Environment (production/stage):' dartEnv &&
+      [[ "$dartEnv" == "production" || "$dartEnv" == "stage" ]] && break ||
+      echo "Invalid input. Please enter 'production' or 'stage'."
+    done
+    flutter build appbundle --dart-define=DART_ENV=$dartEnv --release &&
+    cd build/app/outputs/bundle/release && open .
+  ios: |
+    while true; do
+      read -p 'Enter Environment (production/stage):' dartEnv &&
+      [[ "$dartEnv" == "production" || "$dartEnv" == "stage" ]] && break ||
+      echo "Invalid input. Please enter 'production' or 'stage'."
+    done
+    flutter build ipa --dart-define=DART_ENV=$dartEnv --release &&
+    cd build/ios/ipa && open .
