@@ -17,12 +17,7 @@ final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
   // ---------- BLoCs ----------
-  sl.registerFactory(
-    () => AuthBloc(
-      signInUseCase: sl(),
-      signUpUseCase: sl(),
-    ),
-  );
+  sl.registerFactory(() => AuthBloc(signInUseCase: sl(), signUpUseCase: sl()));
 
   // ---------- Use Cases ----------
   sl.registerLazySingleton(() => SignInUseCase(sl()));
@@ -44,9 +39,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => MessagingService());
 
   // ---------- Core ----------
-  sl.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(sl()),
-  );
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   // ---------- External ----------
   sl.registerLazySingleton(() => FirebaseAuth.instance);
