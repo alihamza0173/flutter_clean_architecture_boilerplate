@@ -35,6 +35,6 @@ class CrashlyticsService {
   }
 
   Future<void> log(String message) async {
-    _crashlytics.log(message);
+    unawaited(_crashlytics.log(message));
   }
 }

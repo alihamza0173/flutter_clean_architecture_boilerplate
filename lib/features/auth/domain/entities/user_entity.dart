@@ -27,7 +27,7 @@ class Test {
 class NewTest extends Test {
   const NewTest({required super.uid, required super.email});
 
-  factory NewTest.ne() => NewTest(uid: "uid", email: "email");
+  factory NewTest.ne() => const NewTest(uid: "uid", email: "email");
 }
 
-final test = Test(uid: 'uid', email: 'email');
+const test = Test(uid: 'uid', email: 'email');

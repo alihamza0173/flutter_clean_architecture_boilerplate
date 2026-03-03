@@ -9,6 +9,7 @@ import '../bloc/auth_state.dart';
 import '../widgets/auth_form.dart';
 
 class RegisterPage extends StatelessWidget {
+  static const ROUTE_NAME = 'register';
   const RegisterPage({super.key});
 
   @override
@@ -18,9 +19,9 @@ class RegisterPage extends StatelessWidget {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
             }
             if (state is AuthAuthenticated) {
               context.go('/home');
@@ -33,7 +34,7 @@ class RegisterPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 60),
-                  Text(
+                  const Text(
                     AppStrings.register,
                     style: AppTextStyles.heading1,
                     textAlign: TextAlign.center,
@@ -41,9 +42,7 @@ class RegisterPage extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     'Create an account to get started.',
-                    style: AppTextStyles.body.copyWith(
-                      color: Colors.grey,
-                    ),
+                    style: AppTextStyles.body.copyWith(color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),
@@ -52,11 +51,8 @@ class RegisterPage extends StatelessWidget {
                     isLoading: state is AuthLoading,
                     onSubmit: (email, password) {
                       context.read<AuthBloc>().add(
-                            AuthSignUpRequested(
-                              email: email,
-                              password: password,
-                            ),
-                          );
+                        AuthSignUpRequested(email: email, password: password),
+                      );
                     },
                   ),
                   const SizedBox(height: 16),

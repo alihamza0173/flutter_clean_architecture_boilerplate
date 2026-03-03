@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
+import '../../injection_container.dart';
 
 class AppRouter {
   AppRouter._();
 
   static final GoRouter router = GoRouter(
+    refreshListenable: sl<AuthBloc>(),
     initialLocation: '/login',
     routes: [
       GoRoute(
         path: '/login',
-        name: 'login',
+        name: LoginPage.ROUTE_NAME,
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
         path: '/register',
-        name: 'register',
+        name: RegisterPage.ROUTE_NAME,
         builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
@@ -27,5 +31,12 @@ class AppRouter {
         ),
       ),
     ],
+    redirect: (context, state) {
+      final state = sl<AuthBloc>().state;
+      if (state is! AuthAuthenticated) {
+        return '/login';
+      }
+      return null;
+    },
   );
 }

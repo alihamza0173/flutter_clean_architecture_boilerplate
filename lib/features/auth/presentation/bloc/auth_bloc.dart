@@ -1,17 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/sign_in_usecase.dart';
 import '../../domain/usecases/sign_up_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> with ChangeNotifier {
   final SignInUseCase signInUseCase;
   final SignUpUseCase signUpUseCase;
 
-  AuthBloc({
-    required this.signInUseCase,
-    required this.signUpUseCase,
-  }) : super(const AuthInitial()) {
+  AuthBloc({required this.signInUseCase, required this.signUpUseCase})
+    : super(const AuthInitial()) {
     on<AuthSignInRequested>(_onSignInRequested);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);

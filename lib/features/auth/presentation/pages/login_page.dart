@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_clean_architecture/injection_container.dart';
+import '../../../../injection_container.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -10,13 +10,14 @@ import '../bloc/auth_state.dart';
 import '../widgets/auth_form.dart';
 
 class LoginPage extends StatelessWidget {
+  static const ROUTE_NAME = 'login';
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<AuthBloc>(),
-      child: Scaffold(body: LoginBody()),
+      child: const Scaffold(body: LoginBody()),
     );
   }
 }
@@ -45,7 +46,7 @@ class LoginBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                Text(
+                const Text(
                   AppStrings.login,
                   style: AppTextStyles.heading1,
                   textAlign: TextAlign.center,
