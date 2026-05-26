@@ -4,6 +4,7 @@ import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../injection_container.dart';
 
 class AppRouter {
@@ -11,32 +12,29 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     refreshListenable: sl<AuthBloc>(),
-    initialLocation: '/login',
+    initialLocation: LoginPage.ROUTE_PATH,
+    redirect: _redirect,
     routes: [
       GoRoute(
-        path: '/login',
-        name: LoginPage.ROUTE_NAME,
+        path: LoginPage.ROUTE_PATH,
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-        path: '/register',
-        name: RegisterPage.ROUTE_NAME,
+        path: RegisterPage.ROUTE_PATH,
         builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
-        path: '/home',
-        name: 'home',
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Home — replace with your home page')),
-        ),
+        path: HomePage.ROUTE_PATH,
+        builder: (context, state) => const HomePage(),
       ),
     ],
-    redirect: (context, state) {
-      final state = sl<AuthBloc>().state;
-      if (state is! AuthAuthenticated) {
-        return '/login';
-      }
-      return null;
-    },
   );
+}
+
+String? _redirect(BuildContext context, GoRouterState state) {
+  final authState = sl<AuthBloc>().state;
+  if (authState is! AuthAuthenticated) {
+    return LoginPage.ROUTE_PATH;
+  }
+  return null;
 }

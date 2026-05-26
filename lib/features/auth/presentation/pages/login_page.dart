@@ -8,9 +8,11 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_form.dart';
+import '../../../home/presentation/pages/home_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
-  static const ROUTE_NAME = 'login';
+  static const ROUTE_PATH = '/login';
   const LoginPage({super.key});
 
   @override
@@ -36,7 +38,7 @@ class LoginBody extends StatelessWidget {
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
           if (state is AuthAuthenticated) {
-            context.go('/home');
+            context.go(HomePage.ROUTE_PATH);
           }
         },
         builder: (context, state) {
@@ -73,7 +75,7 @@ class LoginBody extends StatelessWidget {
                   children: [
                     const Text(AppStrings.dontHaveAccount),
                     GestureDetector(
-                      onTap: () => context.go('/register'),
+                      onTap: () => context.go(RegisterPage.ROUTE_PATH),
                       child: Text(
                         AppStrings.signUp,
                         style: TextStyle(
