@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
-import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/loading_text.dart';
 
 class AuthForm extends StatefulWidget {
   final bool isLogin;
@@ -37,10 +37,7 @@ class _AuthFormState extends State<AuthForm> {
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
-      widget.onSubmit(
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
+      widget.onSubmit(_emailController.text.trim(), _passwordController.text);
     }
   }
 
@@ -88,10 +85,17 @@ class _AuthFormState extends State<AuthForm> {
             ),
           ],
           const SizedBox(height: 24),
-          AppButton(
-            text: widget.isLogin ? AppStrings.signIn : AppStrings.signUp,
-            isLoading: widget.isLoading,
+          ElevatedButton(
             onPressed: _submit,
+            child: LoadingText(
+              text: widget.isLogin ? AppStrings.login : AppStrings.register,
+              isLoading: widget.isLoading,
+              prefixIcon: LoadingTextIcon(
+                widget: Icon(
+                  widget.isLogin ? Icons.login : Icons.app_registration,
+                ),
+              ),
+            ),
           ),
         ],
       ),

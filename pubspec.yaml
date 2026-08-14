@@ -41,6 +41,9 @@ dependencies:
   freezed_annotation: ^3.0.0
   json_annotation: ^4.10.0
 
+  cached_network_image: ^3.2.3
+  flutter_svg: ^2.0.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

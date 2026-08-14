@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../injection_container.dart';
@@ -32,34 +33,36 @@ class LoginBody extends StatelessWidget {
     return SafeArea(
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
           if (state is AuthAuthenticated) {
             context.go(HomePage.ROUTE_PATH);
           }
         },
         builder: (context, state) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const .all(24),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 const SizedBox(height: 60),
                 const Text(
                   AppStrings.login,
                   style: AppTextStyles.heading1,
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Welcome back! Please sign in to continue.',
                   style: AppTextStyles.body.copyWith(color: Colors.grey),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
                 const SizedBox(height: 40),
+                if (state is AuthError) ...[
+                  Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 8),
+                ],
                 AuthForm(
                   isLogin: true,
                   isLoading: state is AuthLoading,
@@ -70,21 +73,22 @@ class LoginBody extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(AppStrings.dontHaveAccount),
-                    GestureDetector(
-                      onTap: () => context.go(RegisterPage.ROUTE_PATH),
-                      child: Text(
-                        AppStrings.signUp,
+                Text.rich(
+                  TextSpan(
+                    text: AppStrings.dontHaveAccount,
+                    children: [
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => context.push(RegisterPage.ROUTE_PATH),
+                        text: AppStrings.signUp,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  textAlign: .center,
                 ),
               ],
             ),
