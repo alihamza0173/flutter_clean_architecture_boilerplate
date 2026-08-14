@@ -27,7 +27,7 @@ class AppImage extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final iconTheme = IconTheme.of(context);
     final mColor = color ?? (isIcon ? iconTheme.color : null);
     final mWidth = size ?? width ?? (isIcon ? iconTheme.size : null);
@@ -40,9 +40,7 @@ class AppImage extends StatelessWidget {
         color: color,
         fadeOutDuration: const Duration(milliseconds: 300),
         fadeInDuration: const Duration(milliseconds: 300),
-        placeholder: placeholder == null
-            ? null
-            : (final context, final _) => placeholder!,
+        placeholder: placeholder == null ? null : (context, _) => placeholder!,
       );
     } else if (image.startsWith('/')) {
       child = Image.file(File(image), fit: fit);

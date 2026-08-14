@@ -22,7 +22,7 @@ class LoadingText extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final buttonStyle = ElevatedButtonTheme.of(context).style;
 
     if (isLoading) {
@@ -46,10 +46,7 @@ class LoadingText extends StatelessWidget {
     );
   }
 
-  Widget _buildIcon(
-    final LoadingTextIcon data,
-    final Color? foregroundColor,
-  ) {
+  Widget _buildIcon(LoadingTextIcon data, Color? foregroundColor) {
     if (data.widget != null) {
       Widget child = data.widget!;
       if (data.isColorDynamic && foregroundColor != null) {
@@ -100,9 +97,9 @@ class LoadingTextIcon {
     this.color,
     this.isColorDynamic = false,
   }) : assert(
-          (icon != null && widget == null) || (icon == null && widget != null),
-          'Either icon or widget must be provided',
-        ) {
+         (icon != null && widget == null) || (icon == null && widget != null),
+         'Either icon or widget must be provided',
+       ) {
     if (isColorDynamic) {
       assert(color == null);
     }
