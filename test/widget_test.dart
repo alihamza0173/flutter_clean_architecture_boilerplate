@@ -1,29 +1,63 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:material_ui/material_ui.dart';
-import 'package:flutter_clean_architecture/app/app.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_clean_architecture/features/posts/domain/entities/post_entity.dart';
+import 'package:flutter_clean_architecture/features/posts/presentation/bloc/posts_bloc.dart';
+import 'package:flutter_clean_architecture/features/posts/presentation/bloc/posts_event.dart';
+import 'package:flutter_clean_architecture/features/posts/presentation/bloc/posts_state.dart';
+import 'package:flutter_clean_architecture/features/posts/presentation/pages/posts_page.dart';
+import 'package:flutter_clean_architecture/injection_container.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockPostsBloc extends MockBloc<PostsEvent, PostsState>
+    implements PostsBloc {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const App());
+  late MockPostsBloc postsBloc;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  setUp(() {
+    postsBloc = MockPostsBloc();
+    sl.registerFactory<PostsBloc>(() => postsBloc);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  tearDown(() => sl.reset());
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  Future<void> pumpPostsPage(WidgetTester tester) {
+    return tester.pumpWidget(const MaterialApp(home: PostsPage()));
+  }
+
+  testWidgets('shows a loading indicator before the posts arrive', (
+    tester,
+  ) async {
+    when(() => postsBloc.state).thenReturn(const PostsLoading());
+
+    await pumpPostsPage(tester);
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('renders the loaded posts', (tester) async {
+    when(() => postsBloc.state).thenReturn(
+      const PostsLoaded([
+        PostEntity(id: 1, userId: 7, title: 'First post', body: 'Body one'),
+        PostEntity(id: 2, userId: 7, title: 'Second post', body: 'Body two'),
+      ]),
+    );
+
+    await pumpPostsPage(tester);
+
+    expect(find.text('First post'), findsOneWidget);
+    expect(find.text('Second post'), findsOneWidget);
+  });
+
+  testWidgets('shows the failure message with a retry action', (tester) async {
+    when(
+      () => postsBloc.state,
+    ).thenReturn(const PostsError('No internet connection'));
+
+    await pumpPostsPage(tester);
+
+    expect(find.text('No internet connection'), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
   });
 }
